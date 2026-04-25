@@ -1,0 +1,177 @@
+{
+  "name": "Tugas 2 AI",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "17bHWY1zLCdIHEHXrWZb-GDmkuDTlywjQgm0lRdmH5kM",
+          "mode": "list",
+          "cachedResultName": "n8n 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17bHWY1zLCdIHEHXrWZb-GDmkuDTlywjQgm0lRdmH5kM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17bHWY1zLCdIHEHXrWZb-GDmkuDTlywjQgm0lRdmH5kM/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        528,
+        192
+      ],
+      "id": "10a21900-1764-4689-a2ef-cc361a72d1e6",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "o7KAk9w32QCdmT6G",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-flash-lite-latest",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "id": "f85e0998-df85-41ce-a81d-a6b5866f2d55",
+      "cid": "Ikx1Y2FzIFBleXJpbiI",
+      "name": "Connect Gemini",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "creator": "Octaviani Nursalsabila",
+      "position": [
+        272,
+        176
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "4uoK7invFFsMCbDZ",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi! 👋",
+        "options": {
+          "inputPlaceholder": "Ketik pertanyaanmu di sini...",
+          "showWelcomeScreen": false,
+          "subtitle": "Tanyakan tentang program pelatihan dan harga NFA di sini",
+          "title": "Chatbot Pelatihan NFA",
+          "responseMode": "lastNode"
+        }
+      },
+      "id": "d856cb19-a2fb-4eab-9651-79fa5c2248c9",
+      "cid": "Ikx1Y2FzIFBleXJpbiI",
+      "name": "Example Chat",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "creator": "Octaviani Nursalsabila",
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "e5616171-e3b5-4c39-81d4-67409f9fa60a",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Kamu adalah chatbot informasi pelatihan.\n\nGunakan data dari Google Sheets.\n\nKolom yang tersedia:\n- Jenis_Pelatihan\n- Nama_Pelatihan\n- Deskripsi_Pelatihan\n- Biaya\n\nTugasmu:\n- Jika user bertanya tentang harga pelatihan, cari berdasarkan Nama_Pelatihan\n- Tampilkan nama pelatihan dan biaya\n\nFormat jawaban:\n\"Harga pelatihan [Nama_Pelatihan] adalah Rp [Biaya]\"\n\nJika tidak ditemukan:\nJawab dengan sopan bahwa data tidak tersedia.\n\nSelalu jawab dalam Bahasa Indonesia."
+        }
+      },
+      "id": "74e4e445-518d-46d3-9ba0-2d1954d95e2e",
+      "cid": "Ikx1Y2FzIFBleXJpbiI",
+      "name": "Chatbot Pelatihan NFA",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "creator": "Octaviani Nursalsabila",
+      "position": [
+        288,
+        0
+      ],
+      "typeVersion": 2.2,
+      "retryOnFail": true
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        384,
+        304
+      ],
+      "id": "e49d4850-0865-4631-9253-37e672ef5953",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Chatbot Pelatihan NFA",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Connect Gemini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Chatbot Pelatihan NFA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Example Chat": {
+      "main": [
+        [
+          {
+            "node": "Chatbot Pelatihan NFA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Chatbot Pelatihan NFA",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "caedfdc5-67c2-4626-87dd-106884c9e244",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6b3c0346dcd05c064b844fbf9dfdb65bbbfaa5e5f645d7ac9988c7c4816eb1b9"
+  },
+  "id": "NJ1rkNBtsp6L5IF6",
+  "tags": []
+}
